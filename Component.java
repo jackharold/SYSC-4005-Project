@@ -17,4 +17,8 @@ public class Component {
         return type;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj) && (this.type.equals(((Component) obj).type));
+    }
 }
