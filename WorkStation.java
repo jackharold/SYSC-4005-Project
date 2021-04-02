@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 public class WorkStation {
 
@@ -26,6 +27,16 @@ public class WorkStation {
 
     public Boolean isComponentPresent(Component testingComponent){
         return storedComponents.contains(testingComponent);
+    }
+
+    public Boolean areComponentsPresent(){
+        int numberOfMatches = 0;
+        for (int i=0; i < validComponentTypes.length; i++) {
+            for (int j=0; j < storedComponents.size(); j++){
+                if (storedComponents.get(j).getType() == validComponentTypes[i]) numberOfMatches++;
+            }
+        }
+        return numberOfMatches == validComponentTypes.length;
     }
 
     public void addComponent(Component addedComponent){

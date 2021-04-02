@@ -8,15 +8,26 @@ public class Event {
 
     EventType type;
     int eventID;
+    float eventTime;
     Component eventComponent;
     Inspector eventInspector = null;
     WorkStation eventWorkStation = null;
 
-    public Event(EventType type, int eventID, Component eventComponent, Inspector eventInspector, WorkStation eventWorkStation) {
+    public Event(EventType type, int eventID, float eventTime, Component eventComponent, Inspector eventInspector) {
         this.type = type;
         this.eventID = eventID;
+        this.eventTime = eventTime;
         this.eventComponent =  eventComponent;
         this.eventInspector =  eventInspector;
+        this.eventWorkStation =  null;
+    }
+
+    public Event(EventType type, int eventID, float eventTime, Component eventComponent, WorkStation eventWorkStation) {
+        this.type = type;
+        this.eventID = eventID;
+        this.eventTime = eventTime;
+        this.eventComponent =  eventComponent;
+        this.eventInspector =  null;
         this.eventWorkStation =  eventWorkStation;
     }
 
@@ -29,6 +40,10 @@ public class Event {
 
     public int getEventID() {
         return eventID;
+    }
+
+    public float getEventTime() {
+        return eventTime;
     }
 
     public Component getEventComponent() {

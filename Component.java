@@ -19,6 +19,6 @@ public class Component {
 
     @Override
     public boolean equals(Object obj) {
-        return super.equals(obj) && (this.type.equals(((Component) obj).type));
+        return this.type.equals(((Component) obj).type);
     }
 }

@@ -3,24 +3,41 @@ import java.util.ArrayList;
 public class Buffer {
 
     public enum BufferType {
-        INSPECTOR_BUFFER,
-        WORKSTATION_BUFFER
+        COMPONENT_1_BUFFER,
+        COMPONENT_2_BUFFER,
+        COMPONENT_3_BUFFER
     }
 
-    ArrayList<Component> components;
-    BufferType type;
+    final int BUFFER_SIZE = 2;
 
-    public Buffer(BufferType type){
+    ArrayList<Component> components;
+    Component.ComponentType type;
+    WorkStation workStation;
+    Inspector inspector;
+
+    public Buffer(Component.ComponentType type, WorkStation workStation, Inspector inspector){
         this.type = type;
+        this.workStation = workStation;
+        this.inspector = inspector;
         components = new ArrayList<Component>();
     }
 
-    public BufferType getType() {
+    public Component.ComponentType getType() {
         return type;
     }
 
+    public Inspector getInspector() {
+        return inspector;
+    }
+
+    public WorkStation getWorkStation() {
+        return workStation;
+    }
+
     public Boolean pushComponent(Component newComponent){
-        return components.add(newComponent);
+        if (components.size() >= BUFFER_SIZE) return false;
+        components.add(0, newComponent);
+        return true;
     }
 
     public Component popComponent(){
@@ -31,6 +48,14 @@ public class Buffer {
 
     public Component peekComponent(){
         return components.get(components.size()-1);
+    }
+
+    public Boolean isFull(){
+        return components.size() >= BUFFER_SIZE;
+    }
+
+    public Boolean isEmpty(){
+        return components.isEmpty();
     }
 
 }
