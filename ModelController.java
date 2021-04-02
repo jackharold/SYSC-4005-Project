@@ -17,11 +17,33 @@ public class ModelController {
 
 
     public static void main(String[] args) {
+        int cycles = 100;
+        float[] averages = new float[11];
         ModelController modelController = new ModelController();
-        modelController.runSimulator(5000000);
+        
+        for (int i=0; i<cycles; i++){
+            float[] test = modelController.runSimulator(1000000);
+            for (int j=0; j<11; j++){
+             averages[j] += test[j]/100;
+            }
+        }
+        System.out.println("Averages: ");
+        //for (int j=0; j<11; j++){
+        //    System.out.print(averages[j]/cycles + " ");
+        //}
+
+        System.out.println("----------------");
+        System.out.println("Final Time: " + averages[0]);
+        System.out.println("Blocked Time Intervals: " + averages[1] + ", " + averages[2]);
+        System.out.println("Blocked Time Intervals per unit of time: " + averages[3] + ", " + averages[4]);
+        System.out.println("Number of Completed Products: " + averages[5]  + ", " + averages[6] + ", " + averages[7]);
+        System.out.println("Number of Completed Products per unit of time: " + averages[8]  + ", " + averages[9] + ", " + averages[10]);
+        System.out.println("----------------");
     }
 
-    public void runSimulator(float endTime){
+    public float[] runSimulator(float endTime){
+        float[] endValues = new float[11];
+
         eventlist = new EventList();
         delayGenerator = new DelayGenerator();
         randomGenerator = new Random();
@@ -67,6 +89,19 @@ public class ModelController {
         System.out.println("Number of Completed Products per unit of time: " + completedProducts[0]/currentEventTime  + ", " + completedProducts[1]/currentEventTime + ", " + completedProducts[2]/currentEventTime);
         System.out.println("----------------");
 
+        endValues[0] = currentEventTime;
+        endValues[1] = currentTimeBlocked[0];
+        endValues[2] = currentTimeBlocked[1];
+        endValues[3] = currentTimeBlocked[0]/currentEventTime;
+        endValues[4] = currentTimeBlocked[1]/currentEventTime;
+        endValues[5] = completedProducts[0];
+        endValues[6] = completedProducts[1];
+        endValues[7] = completedProducts[2];
+        endValues[8] = completedProducts[0]/currentEventTime;
+        endValues[9] = completedProducts[1]/currentEventTime;
+        endValues[10] = completedProducts[2]/currentEventTime;
+
+        return endValues;
     }
 
     private Boolean parseNextEvent(){
