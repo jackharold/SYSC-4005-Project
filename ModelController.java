@@ -17,27 +17,78 @@ public class ModelController {
 
 
     public static void main(String[] args) {
-        int cycles = 100;
+        int cycles = 100; // Total simulations run
+        int ignored = 0; // Number of initial simulations deleted from the result calculations
         float[] averages = new float[11];
+
+        float[] inspector1 = new float[cycles];
+        float[] inspector2 = new float[cycles];
+        float[] output1 = new float[cycles];
+        float[] output2 = new float[cycles];
+        float[] output3 = new float[cycles];
+
         ModelController modelController = new ModelController();
         
         for (int i=0; i<cycles; i++){
             float[] test = modelController.runSimulator(1000000);
             for (int j=0; j<11; j++){
-             averages[j] += test[j]/100;
+                if (i >= ignored-1){
+                    averages[j] += test[j]/(100-ignored);
+                    if (j == 3) inspector1[i] = test[j];
+                    if (j == 4) inspector2[i] = test[j];
+                    if (j == 8) output1[i] = test[j];
+                    if (j == 9) output2[i] = test[j];
+                    if (j == 10) output3[i] = test[j];
+                } 
             }
         }
-        System.out.println("Averages: ");
-        //for (int j=0; j<11; j++){
-        //    System.out.print(averages[j]/cycles + " ");
-        //}
+        System.out.println("Averages: " + (cycles-ignored));
+        
+        double[] tests = new double[5];
+
+        // For each of the desired outputs, calculate the +/- range of the 95% confidence interval
+        double testValue = 0;
+        for (int i=ignored; i<cycles; i++){
+            testValue += (inspector1[i]-averages[3])*(inspector1[i]-averages[3]);
+        }
+        tests[0] = Math.sqrt(testValue/(cycles-1))/Math.sqrt(cycles);
+
+
+        testValue = 0;
+        for (int i=ignored; i<cycles; i++){
+            testValue += (inspector2[i]-averages[4])*(inspector2[i]-averages[4]);
+        }
+        tests[1] = Math.sqrt(testValue/(cycles-1))/Math.sqrt(cycles);
+
+
+        testValue = 0;
+        for (int i=ignored; i<cycles; i++){
+            testValue += (output1[i]-averages[8])*(output1[i]-averages[8]);
+        }
+        tests[2] = Math.sqrt(testValue/(cycles-1))/Math.sqrt(cycles);
+
+
+        testValue = 0;
+        for (int i=ignored; i<cycles; i++){
+            testValue += (output2[i]-averages[9])*(output2[i]-averages[9]);
+        }
+        tests[3] = Math.sqrt(testValue/(cycles-1))/Math.sqrt(cycles);
+
+
+        testValue = 0;
+        for (int i=ignored; i<cycles; i++){
+            testValue += (output3[i]-averages[10])*(output3[i]-averages[10]);
+        }
+        tests[4] = Math.sqrt(testValue/(cycles-1))/Math.sqrt(cycles);
 
         System.out.println("----------------");
         System.out.println("Final Time: " + averages[0]);
-        System.out.println("Blocked Time Intervals: " + averages[1] + ", " + averages[2]);
+        //System.out.println("Blocked Time Intervals: " + averages[1] + ", " + averages[2]);
         System.out.println("Blocked Time Intervals per unit of time: " + averages[3] + ", " + averages[4]);
-        System.out.println("Number of Completed Products: " + averages[5]  + ", " + averages[6] + ", " + averages[7]);
+        System.out.println(tests[0] + " " +tests[1]);
+        //System.out.println("Number of Completed Products: " + averages[5]  + ", " + averages[6] + ", " + averages[7]);
         System.out.println("Number of Completed Products per unit of time: " + averages[8]  + ", " + averages[9] + ", " + averages[10]);
+        System.out.println(tests[2]+ " "+ tests[3] + " " +tests[4]);
         System.out.println("----------------");
     }
 
